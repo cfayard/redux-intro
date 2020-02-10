@@ -23,28 +23,81 @@
 //     type: '🍄'
 // }
 
+// Question #1:
+// How wouold you handle state, with two different amounts?
+// {
+//     amount1: 101,
+//     amount2: 3
+// }
 
 import {
     createStore
 } from 'redux';
 
+// CREATE YOUR Action types as constants
+// so that you get error messages for typos.
+const INCREMENT = 'INCREMENT'
+const DECREMENT = 'DECREMENT'
+
+// Question #2:
+// How would you handle state so you could add and remove amounts?
+// Where each amount can be incremented and decremented?
+const ADD_COUNTER = 'ADD_COUNTER';
+const DEL_COUNTER = 'DEL_COUNTER';
+
+// write action creator functions.
+// They format your action objects
+// Again, to avoid typos
+function actionIncrement(howMuch=1) {
+    return {
+        type: INCREMENT,
+        amount: howMuch
+    }
+}
+function actionDecrement(howMuch=1) {
+    return {
+        type: DECREMENT,
+        amount: howMuch
+    }
+}
+function actionAdd() {
+    return {
+        type: ADD_COUNTER
+    }
+}
+function actionDel() {
+    return {
+        type: DEL_COUNTER
+    }
+}
+
 
 // "the teller" - reducer function
 // reducers are always named form the state they manage
 // They always receive the current state and the action theyre processing.
-function counter(state={amount: 100}, action) {
-    // console.table(action)
+const defaultState = {amount: 100}
+function counter(state=defaultState, action) {
+    console.log('somebody called counter')
     const newState = { ...state };
-    if (action.type === 'INCREMENT') {
-        newState.amount =  state.amount + 1;
-    } else if (action.type === 'DECREMENT') {
-        newState.amount = state.amount - 1;
-    } else {
-        // no need to do anything. 
-        // we already made a copy of state to return.
+
+    switch(action.type) {
+        case 'INCREMENT':
+            newState.amount = state.amount + action.amount;
+            break;
+        case 'DECREMENT':
+            newState.amount = state.amount - action.amount;
+            break;
+        case 'ADD_COUNTER':
+            newState.amount = state.amount - action.amount;
+            break;
+        case 'DEL_COUNTER':
+            newState.amount = state.amount - action.amount;
+            break;
+        default:
+            break;
     }
     // They *must* return the new version of state
-    return newState
+    return newState;
 }
 
 // You give it a reducer, it gives you a "store".
@@ -60,11 +113,22 @@ store.subscribe(() => {
 });
 
 // Lets give the store some actions to process.
-store.dispatch({
-    type: 'INCREMENT'
-});
+store.dispatch(actionIncrement());
+store.dispatch(actionDecrement());
+store.dispatch(actionAdd());
+store.dispatch(actionDel());
 
+store.dispatch(actionIncrement(5));
+store.dispatch(actionDecrement(99));
 
+// store.dispatch({
+//     type: 'INCREMENT',
+//     amount: 'garbage'
+// });
+
+// store.dispatch({
+//     type: '🔊'
+// });
 
 // import React from 'react';
 // import ReactDOM from 'react-dom';
