@@ -43,24 +43,41 @@
 import { 
     createStore
 } from 'redux';
+// import { act } from 'react-dom/test-utils';
 // "The teller" - reducer function
 // reducers are always named for the state they manage.
 // They always receive the current state and the action
 // they're processing.
 const defaultState = { amounts: [0, 0, 0, 0, 0] };
 
+// Create
+const ADD_COUNTER = 'ADD_COUNTER'
+// Update
+const INCREMENT = 'INCREMENT'
+const DECREMENT = 'DECREMENT'
+
+// Delete
+const DEL_COUNTER = 'DEL_COUNTER'
+
 function counter(state=defaultState, action) {
     console.log('Somebody called counter()');
     const newState = { ...state };
 
-    if (action.type === 'INCREMENT') {
-        newState.amounts[action.id] = state.amounts[action.id] + 1;
-    } else if (action.type === 'DECREMENT') {
-        newState.amounts[action.id] = state.amounts[action.id] - 1;
-    } else {
-      // ... no need to do anything.
-      // we already made a copy of state to return.
+    switch(action.type) {
+        case INCREMENT:
+            newState.amounts[action.id] = state.amounts[action.id] + 1
+        break;
+        case DECREMENT:
+            newState.amounts[action.id] = state.amounts[action.id] - 1
+        break;
+        case ADD_COUNTER:
+            newState.amounts.push(0)
+        break;
+        case DEL_COUNTER:
+            newState.amounts.splice(action.id, 1)
+        break;    
     }
+
     // They *must* return the new version of state.
     return newState;
 }
@@ -91,26 +108,27 @@ function actionDecrement(id) {
     }
 }
 
+function actionADD_COUNTER() {
+    return {
+        type: 'ADD_COUNTER'
+    }
+}
+
+function actionDEL_COUNTER() {
+    return {
+        type: 'DEL_COUNTER'
+    }
+}
+
 // Let's give the store some actions to process.
-store.dispatch(actionIncrement(0));
-store.dispatch(actionIncrement(0));
-store.dispatch(actionIncrement(0));
-store.dispatch(actionIncrement(2));
-store.dispatch(actionIncrement(2));
-store.dispatch(actionDecrement(0));
-store.dispatch(actionDecrement(1));
-store.dispatch(actionDecrement(4));
+store.dispatch(actionADD_COUNTER());
+store.dispatch(actionADD_COUNTER());
+store.dispatch(actionADD_COUNTER());
+store.dispatch(actionADD_COUNTER());
+store.dispatch(actionADD_COUNTER());
+store.dispatch(actionDEL_COUNTER());
+store.dispatch(actionDEL_COUNTER());
+store.dispatch(actionDEL_COUNTER());
+store.dispatch(actionIncrement());
+store.dispatch(actionDecrement());
 
-
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// import './index.css';
-// import App from './App';
-// import * as serviceWorker from './serviceWorker';
-
-// ReactDOM.render(<App />, document.getElementById('root'));
-
-// // If you want your app to work offline and load faster, you can change
-// // unregister() to register() below. Note this comes with some pitfalls.
-// // Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();
